@@ -1,0 +1,66 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://scripts/input_bootstrap.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/player.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/vehicle.tscn" id="3"]
+[ext_resource type="PackedScene" path="res://scenes/prop.tscn" id="4"]
+[ext_resource type="PackedScene" path="res://scenes/boss.tscn" id="5"]
+
+[sub_resource type="BoxShape3D" id="BoxShape_floor"]
+size = Vector3(80, 1, 8)
+
+[sub_resource type="BoxMesh" id="BoxMesh_floor"]
+size = Vector3(80, 1, 8)
+
+[sub_resource type="StandardMaterial3D" id="Material_floor"]
+albedo_color = Color(0.2, 0.24, 0.22, 1)
+roughness = 1.0
+
+[node name="Main" type="Node3D"]
+
+[node name="InputBootstrap" type="Node" parent="."]
+script = ExtResource("1")
+
+[node name="World" type="Node3D" parent="."]
+
+[node name="Floor" type="StaticBody3D" parent="World"]
+collision_layer = 1
+collision_mask = 0
+position = Vector3(0, -0.5, 0)
+
+[node name="FloorMesh" type="MeshInstance3D" parent="World/Floor"]
+mesh = SubResource("BoxMesh_floor")
+surface_material_override/0 = SubResource("Material_floor")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Floor"]
+shape = SubResource("BoxShape_floor")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="World"]
+rotation = Vector3(-0.7, -0.5, 0)
+light_energy = 1.4
+shadow_enabled = true
+
+[node name="Player" parent="." instance=ExtResource("2")]
+position = Vector3(-5, 0, 0)
+
+[node name="Vehicles" type="Node3D" parent="."]
+
+[node name="Jeep" parent="Vehicles" instance=ExtResource("3")]
+position = Vector3(-3.5, 0, 0)
+
+[node name="Props" type="Node3D" parent="."]
+
+[node name="Crate" parent="Props" instance=ExtResource("4")]
+position = Vector3(2, 0.5, 0)
+
+[node name="Boss" parent="." instance=ExtResource("5")]
+position = Vector3(8, 0, 0)
+
+[node name="Projectiles" type="Node3D" parent="."]
+
+[node name="Camera3D" type="Camera3D" parent="."]
+position = Vector3(1.5, 4.0, 24.0)
+rotation = Vector3(-0.12, 0, 0)
+projection = 1
+size = 14.0
+current = true

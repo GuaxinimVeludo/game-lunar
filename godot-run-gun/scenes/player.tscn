@@ -1,0 +1,60 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://scripts/player_controller.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/weapon_controller.gd" id="2"]
+[ext_resource type="Resource" path="res://resources/rifle.tres" id="3"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape_player"]
+radius = 0.34
+height = 1.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_torso"]
+size = Vector3(0.62, 0.72, 0.35)
+
+[sub_resource type="BoxMesh" id="BoxMesh_head"]
+size = Vector3(0.38, 0.38, 0.34)
+
+[sub_resource type="BoxMesh" id="BoxMesh_arm"]
+size = Vector3(0.52, 0.17, 0.18)
+
+[node name="Player" type="CharacterBody3D" groups=["player"]]
+collision_layer = 2
+collision_mask = 101
+script = ExtResource("1")
+weapon_controller = NodePath("TorsoPivot/WeaponController")
+torso_pivot = NodePath("TorsoPivot")
+arm_pivot = NodePath("TorsoPivot/ArmPivot")
+body_shape = NodePath("CollisionShape3D")
+standing_capsule_height = 1.8
+crouched_capsule_height = 1.05
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.9, 0)
+shape = SubResource("CapsuleShape_player")
+
+[node name="TorsoPivot" type="Node3D" parent="."]
+position = Vector3(0, 1.15, 0)
+
+[node name="Torso" type="MeshInstance3D" parent="TorsoPivot"]
+mesh = SubResource("BoxMesh_torso")
+
+[node name="Head" type="MeshInstance3D" parent="TorsoPivot"]
+position = Vector3(0, 0.57, 0)
+mesh = SubResource("BoxMesh_head")
+
+[node name="ArmPivot" type="Node3D" parent="TorsoPivot"]
+position = Vector3(0.28, 0.12, 0)
+
+[node name="Arm" type="MeshInstance3D" parent="TorsoPivot/ArmPivot"]
+position = Vector3(0.24, 0, 0)
+mesh = SubResource("BoxMesh_arm")
+
+[node name="WeaponController" type="Node3D" parent="TorsoPivot"]
+script = ExtResource("2")
+weapon_data = ExtResource("3")
+muzzle = NodePath("Muzzle")
+shooter = NodePath("../..")
+projectile_parent = NodePath("../../../Projectiles")
+
+[node name="Muzzle" type="Marker3D" parent="TorsoPivot/WeaponController"]
+position = Vector3(0.67, 0.1, 0)
